@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const enableBanner = true;
+  const enableBanner = false;
 
   if (enableBanner) {
     const banner = document.createElement("div");
