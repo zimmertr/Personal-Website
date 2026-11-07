@@ -4,7 +4,7 @@ Every workflow calls a zimmertr/yggdrasil module, pinned by commit SHA.
 
 | Workflow | Runs on | What it does |
 |---|---|---|
-| [`pr.yml`](../.github/workflows/pr.yml) | PRs | `docker-build`: hadolint, the linux/amd64 image built but not pushed, a Trivy table in a sticky comment, a smoke test (the page on 80, `stub_status` on 8080), and a failure on any fixable Critical or High. |
+| [`pr.yml`](../.github/workflows/pr.yml) | PRs | `docker-build`: hadolint, the linux/amd64 image built but not pushed, a Trivy table in a sticky comment, `nginx -t` against the image's config, and a failure on any fixable Critical or High. |
 | [`release.yml`](../.github/workflows/release.yml) | merges to `main`, and PRs as a dry run | `release`: GitVersion reads the bump from the squash commit's title, pushes `zimmertr/personal-website:<version>` to Docker Hub, scans it, tags and releases the commit, then opens a self-merging Kubernetes-Manifests PR that sets the Rollout's `newTag`. On a PR it only says, in the job summary, what the merge will release. |
 | [`pr-title.yml`](../.github/workflows/pr-title.yml) | PRs | `pr-title`: the title must be `type(scope): summary`. |
 | [`lint.yml`](../.github/workflows/lint.yml) | PRs | `lint`: actionlint, zizmor's pedantic audits, and Semgrep's rule that the Dockerfile's `FROM` carries a digest. |

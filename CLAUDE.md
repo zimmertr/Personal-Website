@@ -7,7 +7,7 @@ This repo took a trimmed set of the files a new project starts with (zimmertr/yg
 ## Rules
 
 - **A merge is a deploy.** Every merge to `main` pushes a new image and opens a self-merging Kubernetes-Manifests PR; the Rollout's canary checks the site before it takes all the traffic. The PR title sets the version bump.
-- **nginx serves the site on 80 and `stub_status` on 8080.** The Rollout and the PR's smoke test both rely on those ports.
+- **nginx serves the site on 80 and `stub_status` on 8080.** The Rollout relies on those ports.
 - **UI changes start with a mockup,** and use the `frontend-design` skill.
 - The README is TJ's: keep it accurate and in his voice, and never restructure it.
 

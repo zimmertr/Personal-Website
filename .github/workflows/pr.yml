@@ -27,14 +27,7 @@ jobs:
       contents: read # the module checks out the repo
       pull-requests: write # the sticky scan comment
     with:
-      # What only a running image shows: nginx accepts nginx.conf and serves
-      # the page on 80, and the stub_status endpoint the cluster scrapes
-      # answers on 8080.
-      smoke-test: |
-        docker run -d --name site -p 8000:80 -p 8081:8080 "$IMAGE"
-        for _ in 1 2 3 4 5 6 7 8 9 10; do curl -fsS -o /dev/null http://localhost:8000/ && break; sleep 1; done
-        curl -fsS http://localhost:8000/ -o page.html
-        grep -qi '<html' page.html
-        curl -fsS http://localhost:8081/stub_status -o status.txt
-        grep -q 'Active connections' status.txt
-        docker rm -f site
+      # nginx accepts nginx.conf, which only the built image can show. Serving
+      # the page is the Rollout's canary analysis, in the cluster, before the
+      # new version takes traffic.
+      smoke-test: docker run --rm "$IMAGE" nginx -t
