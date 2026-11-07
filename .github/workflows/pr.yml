@@ -1,0 +1,33 @@
+name: PR Checks
+
+# The image a PR would ship, through yggdrasil's docker-build module: hadolint,
+# the linux/amd64 image built but not pushed, a Trivy table in a sticky
+# comment, the smoke test, then a failure on any fixable Critical or High, as
+# the release would refuse.
+#
+# Branch protection requires `Docker Build / Docker Build` (this job's name,
+# then the module's); renaming either strands PRs on a check that never
+# reports.
+on:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: pr-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: {}
+
+jobs:
+  docker-build:
+    name: Docker Build
+    uses: zimmertr/yggdrasil/.github/workflows/docker-build.yml@95c4f710c3600dba170ed579c0beabab507011b9 # v0.9.2
+    permissions:
+      contents: read # the module checks out the repo
+      pull-requests: write # the sticky scan comment
+    with:
+      # nginx accepts nginx.conf, which only the built image can show. Serving
+      # the page is the Rollout's canary analysis, in the cluster, before the
+      # new version takes traffic.
+      smoke-test: docker run --rm "$IMAGE" nginx -t
